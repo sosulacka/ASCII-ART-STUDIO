@@ -380,7 +380,7 @@ mod virtual_camera_linux {
             .route("/", axum::routing::get(index_page))
             .with_state((frame_buffer, running, target_fps));
         
-        match tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await {
+        match tokio::net::TcpListener::bind(format!("127.0.0.1:{}", port)).await {
             Ok(listener) => {
                 eprintln!("✓ Virtual camera HTTP server started on port {}", port);
                 let _ = axum::serve(listener, app).await;
@@ -609,7 +609,7 @@ mod virtual_camera_windows {
             .route("/", axum::routing::get(index_page))
             .with_state((frame_buffer, running, target_fps));
         
-        match tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await {
+        match tokio::net::TcpListener::bind(format!("127.0.0.1:{}", port)).await {
             Ok(listener) => {
                 let _ = axum::serve(listener, app).await;
             }
