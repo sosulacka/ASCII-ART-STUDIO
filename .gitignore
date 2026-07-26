@@ -54,3 +54,7 @@ assets/Axium/bin/**/*.pdb
 assets/Axium/bin/**/*.exp
 assets/Axium/bin/**/*.lib
 
+
+# Локальная ускорялка линковки (rust-lld) — только для машины разработчика.
+# На CI ломает release-сборку, поэтому в репозиторий не попадает.
+src-tauri/.cargo/config.toml

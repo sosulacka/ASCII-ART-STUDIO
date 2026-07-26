@@ -113,6 +113,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          # В репозитории ДВА tauri-проекта (приложение и установщик) —
+          # без явного projectPath экшен путает их и ищет артефакты
+          # в installer/target, где ничего не бандлится.
+          projectPath: src-tauri
           tagName: ${{ github.ref_type == 'tag' && github.ref_name || format('manual-{0}', github.sha) }}
           releaseName: "ASCII Art Studio ${{ github.ref_type == 'tag' && github.ref_name || '' }}"
           releaseBody: 'Кастомный установщик для Windows и пакеты для Linux'
