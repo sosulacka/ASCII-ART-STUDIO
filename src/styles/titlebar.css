@@ -1,0 +1,113 @@
+/* ════════════════════════════════════════════════════════════
+   КАСТОМНЫЙ TITLE BAR
+════════════════════════════════════════════════════════════ */
+.titlebar {
+  height: var(--titlebar-height);
+  min-height: var(--titlebar-height);
+  display: flex;
+  align-items: center;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1000;
+  flex-shrink: 0;
+  /* blur удалён — постоянный backdrop-filter жрёт CPU в простое */
+
+  /* Tauri Drag Region */
+  -webkit-app-region: drag;
+  app-region: drag;
+  user-select: none;
+}
+
+.titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-4);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.titlebar-icon {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.titlebar-title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+}
+/* Терминальный префикс-маркер перед названием окна */
+.titlebar-title::before {
+  content: '~$ ';
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.titlebar-drag {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+}
+
+.titlebar-controls {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  flex-shrink: 0;
+  z-index: 1;
+
+  /* ВАЖНО: прижимает кнопки вправо */
+  margin-left: auto;
+
+  /* Кнопки не участвуют в перетаскивании */
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.titlebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  outline: none;
+
+  /* Кнопки должны получать клики */
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.titlebar-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Кнопка закрыть — красная при hover */
+.titlebar-btn--close:hover {
+  background: #c42b1c;
+  color: #ffffff;
+}
+
+/* Кнопка развернуть */
+.titlebar-btn--maximize:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Кнопка свернуть */
+.titlebar-btn--minimize:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}

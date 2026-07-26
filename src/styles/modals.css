@@ -1,0 +1,177 @@
+/* ════════════════════════════════════════════════════════════
+   МОДАЛЬНОЕ ОКНО
+════════════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn var(--dur) var(--ease);
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  background: var(--bg-modal);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-6);
+  min-width: 300px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  box-shadow: var(--shadow-lg), var(--glow-sm);
+  animation: slideUp var(--dur) var(--ease);
+}
+@keyframes slideUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal-title {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--accent);
+  text-align: center;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  text-shadow: var(--glow-text);
+}
+.modal-subtitle {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: calc(var(--sp-4) * -1);
+  line-height: 1.5;
+}
+
+.modal-buttons { display: flex; gap: var(--sp-3); }
+
+.modal-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-4) var(--sp-2);
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease), transform var(--dur-fast) var(--ease),
+              box-shadow var(--dur-fast) var(--ease);
+  font-family: var(--font-mono);
+}
+.modal-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+  color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-sm);
+}
+.modal-btn:active { transform: translateY(0); }
+.modal-btn-ext {
+  font-size: var(--fs-lg);
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+.modal-cancel {
+  background: none;
+  border: none;
+  color: var(--text-disabled);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  text-align: center;
+  padding: 0;
+  transition: color var(--dur-fast) var(--ease);
+  font-family: var(--font-mono);
+}
+.modal-cancel:hover { color: var(--text-secondary); }
+
+
+/* ── Docs-модалка (справочник по API скриптов Axium) ── */
+.docs-modal {
+  max-width: 640px;
+  width: 90vw;
+  max-height: 80vh;
+  align-items: stretch;
+  text-align: left;
+}
+.docs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+.docs-body {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding-right: var(--sp-2);
+}
+.docs-empty {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  text-align: center;
+  padding: var(--sp-6) 0;
+}
+.docs-class {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.docs-class-name {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--sp-1);
+}
+.docs-method {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: var(--sp-2);
+}
+.docs-sig {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.docs-method-name { color: var(--text-primary); }
+.docs-params { color: var(--syntax-type, var(--text-secondary)); }
+.docs-ret { color: var(--syntax-number, var(--text-muted)); }
+.docs-desc {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  padding-left: var(--sp-2);
+}
+.docs-example {
+  margin: var(--sp-1) 0 0;
+  padding: var(--sp-3);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--text-primary);
+  overflow-x: auto;
+  white-space: pre;
+}

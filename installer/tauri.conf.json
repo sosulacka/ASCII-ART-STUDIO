@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "ASCII Art Studio Setup",
+  "version": "0.1.0",
+  "identifier": "com.ascii.artstudio.installer",
+  "build": {
+    "frontendDist": "./dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "ASCII Art Studio — Установка",
+        "width": 640,
+        "height": 460,
+        "resizable": false,
+        "maximizable": false,
+        "center": true,
+        "visible": false,
+        "backgroundColor": "#0a0a0b",
+        "decorations": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": false
+  }
+}

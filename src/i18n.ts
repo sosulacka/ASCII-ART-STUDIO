@@ -46,6 +46,7 @@ type Strings = {
   symbols: string;
   colorRender: string;
   invert: string;
+  dithering: string;
   viewport: string;
   bgColor: string;
   player: string;
@@ -75,6 +76,7 @@ type Strings = {
   paletteDetailed: string;
   paletteBlocks: string;
   paletteBinary: string;
+  paletteBraille?: string;
   waitingInput: string;
   ctrlZoom: string;
   settingsTitle: string;
@@ -104,6 +106,28 @@ type Strings = {
   copyUrl?: string;
   textToAscii?: string;
   webcamToAscii?: string;
+  imageMode?: string;
+  textMode?: string;
+  webcamMode?: string;
+  scriptsMode?: string;
+  scriptsPanelTitle?: string;
+  scriptNewBtn?: string;
+  scriptRunBtn?: string;
+  scriptRunning?: string;
+  scriptSaveBtn?: string;
+  scriptSaveAsPrompt?: string;
+  scriptDllMissing?: string;
+  scriptPickLibBtn?: string;
+  scriptNoScripts?: string;
+  scriptConsolePlaceholder?: string;
+  scriptDeleteConfirm?: string;
+  scriptDefaultGreeting?: string;
+  scriptDocsBtn?: string;
+  docsTitle?: string;
+  docsSubtitle?: string;
+  docsEmpty?: string;
+  docsSyntaxTitle?: string;
+  docsExampleTitle?: string;
   enterText?: string;
   selectFont?: string;
   fontLayout?: string;
@@ -195,6 +219,18 @@ type Strings = {
   errInvalidImageData?: string;
   vcamNotRunning?: string;
   vcamNotStarted?: string;
+  vcamBusy?: string;
+  vcamStartedSoftcam?: string;
+  vcamRegistered?: string;
+  vcamRegisterDenied?: string;
+  vcamRegisterFailed?: string;
+  vcamInstallPrompt?: string;
+  vcamInstallBtn?: string;
+  updateAvailable?: string;
+  updateNow?: string;
+  updateLater?: string;
+  vcamStartedV4l2?: string;
+  vcamNoLoopback?: string;
   
   savingAs?: string;
   canvasContextError?: string;
@@ -266,7 +302,7 @@ const T: Record<Lang, Strings> = {
     geometry: 'Геометрия и Свет', width: 'Ширина', fontRatio: 'Пропорции шрифта',
     brightness: 'Яркость', contrast: 'Контраст', gamma: 'Гамма',
     symbols: 'Символы и Рендер', colorRender: 'HTML Цветной рендер',
-    invert: 'Инвертировать (Негатив)', viewport: 'Вьюпорт', bgColor: 'Цвет фона',
+    invert: 'Инвертировать (Негатив)', dithering: 'Дизеринг (Флойд–Стейнберг)', viewport: 'Вьюпорт', bgColor: 'Цвет фона',
     player: 'ASCII Плеер', settings: 'Настройки', theme: 'Тема', font: 'Шрифт',
     language: 'Язык', resetDefaults: 'Сбросить настройки',
     saveSettings: 'Сохранить настройки',
@@ -280,6 +316,7 @@ const T: Record<Lang, Strings> = {
     paletteStandard: 'Стандарт (10)', paletteUltra: 'Ультра (92)',
     paletteDetailed: 'Детальный (70)', paletteBlocks: 'Блоки ░▒▓█',
     paletteBinary: 'Бинарный 0/1',
+    paletteBraille: 'Брайль ⠿⣿',
     waitingInput: '[SYSTEM] Ожидание ввода данных.\nЗагрузите файл и нажмите Выполнить.',
     ctrlZoom: 'Ctrl + Колесо — масштаб.',
     settingsTitle: 'Настройки программы',
@@ -306,6 +343,28 @@ const T: Record<Lang, Strings> = {
     copyUrl: 'Копировать URL',
     textToAscii: 'Текст в ASCII',
     webcamToAscii: 'Камера в ASCII',
+    imageMode: 'Медиа',
+    textMode: 'Текст',
+    webcamMode: 'Камера',
+    scriptsMode: 'Скрипты',
+    scriptsPanelTitle: 'Скрипты Axium',
+    scriptNewBtn: 'Новый',
+    scriptRunBtn: 'Запустить',
+    scriptRunning: 'Выполняется...',
+    scriptSaveBtn: 'Сохранить',
+    scriptSaveAsPrompt: 'Имя скрипта:',
+    scriptDllMissing: 'axium_vm не найдена — вкладка скриптов недоступна',
+    scriptPickLibBtn: 'Указать файл движка...',
+    scriptNoScripts: 'Нет сохранённых скриптов',
+    scriptConsolePlaceholder: 'Вывод скрипта появится здесь после запуска',
+    scriptDeleteConfirm: 'Удалить скрипт "{0}"?',
+    scriptDefaultGreeting: 'Привет из Axium!',
+    scriptDocsBtn: 'Справка по API',
+    docsTitle: 'API скриптов',
+    docsSubtitle: 'Native-функции, доступные скриптам Axium',
+    docsEmpty: 'API недоступно (движок не загружен).',
+    docsSyntaxTitle: 'Синтаксис',
+    docsExampleTitle: 'Пример',
     enterText: 'Введите текст...',
     selectFont: 'Выберите шрифт',
     fontLayout: 'Макет шрифта',
@@ -354,8 +413,8 @@ const T: Record<Lang, Strings> = {
     commentSaving: 'Сохранение',
     commentHiddenElements: 'Скрытые элементы для камеры',
     
-    cameraStartedWebAPI: 'Камера запущена (WebAPI)',
-    cameraStartedNative: 'Камера запущена (Native)',
+    cameraStartedWebAPI: 'Камера запущена',
+    cameraStartedNative: 'Камера запущена',
     
     framesLabel: 'кадров',
     symbolsLabel: 'символов',
@@ -392,7 +451,19 @@ const T: Record<Lang, Strings> = {
     errInvalidImageData: 'Неверные данные изображения',
     vcamNotRunning: 'Виртуальная камера не запущена',
     vcamNotStarted: 'Виртуальная камера не запущена',
-    
+    vcamBusy: 'Виртуальная камера уже используется другим приложением',
+    vcamStartedSoftcam: 'Виртуальная камера запущена ({0}) — «DirectShow Softcam» доступна в Discord/Zoom/OBS',
+    vcamRegistered: 'Драйвер виртуальной камеры установлен! Теперь запустите камеру.',
+    vcamRegisterDenied: 'Установка драйвера отменена (нужны права администратора)',
+    vcamRegisterFailed: 'Не удалось зарегистрировать драйвер виртуальной камеры',
+    vcamInstallPrompt: 'Установить драйвер виртуальной камеры? Камера станет видна в Discord, Zoom, OBS как настоящая. Потребуются права администратора (Windows: softcam, Linux: модуль v4l2loopback).',
+    vcamInstallBtn: 'Установить драйвер камеры',
+    updateAvailable: 'Доступно обновление',
+    updateNow: 'Обновить',
+    updateLater: 'Позже',
+    vcamStartedV4l2: 'Виртуальная камера запущена ({0}) через v4l2loopback',
+    vcamNoLoopback: 'Устройство v4l2loopback не найдено. Выполните: sudo modprobe v4l2loopback exclusive_caps=1 card_label="ASCII Art Camera" (exclusive_caps=1 обязателен — иначе Discord/браузеры камеру не увидят)',
+
     savingAs: 'Сохранение как {0}...',
     canvasContextError: 'Canvas context недоступен',
     blobCreateError: 'Не удалось создать image blob',
@@ -434,7 +505,7 @@ const T: Record<Lang, Strings> = {
     geometry: 'Geometry & Light', width: 'Width', fontRatio: 'Font Ratio',
     brightness: 'Brightness', contrast: 'Contrast', gamma: 'Gamma',
     symbols: 'Symbols & Render', colorRender: 'HTML Color Render',
-    invert: 'Invert (Negative)', viewport: 'Viewport', bgColor: 'Background Color',
+    invert: 'Invert (Negative)', dithering: 'Dithering (Floyd–Steinberg)', viewport: 'Viewport', bgColor: 'Background Color',
     player: 'ASCII Player', settings: 'Settings', theme: 'Theme', font: 'Font',
     language: 'Language', resetDefaults: 'Reset Defaults',
     saveSettings: 'Save Settings',
@@ -448,6 +519,7 @@ const T: Record<Lang, Strings> = {
     paletteStandard: 'Standard (10)', paletteUltra: 'Ultra (92)',
     paletteDetailed: 'Detailed (70)', paletteBlocks: 'Blocks ░▒▓█',
     paletteBinary: 'Binary 0/1',
+    paletteBraille: 'Braille ⠿⣿',
     waitingInput: '[SYSTEM] Waiting for input.\nLoad a file and press Execute.',
     ctrlZoom: 'Ctrl + Scroll to zoom.',
     settingsTitle: 'Application Settings',
@@ -474,6 +546,28 @@ const T: Record<Lang, Strings> = {
     copyUrl: 'Copy URL',
     textToAscii: 'Text to ASCII',
     webcamToAscii: 'Webcam to ASCII',
+    imageMode: 'Media',
+    textMode: 'Text',
+    webcamMode: 'Camera',
+    scriptsMode: 'Scripts',
+    scriptsPanelTitle: 'Axium Scripts',
+    scriptNewBtn: 'New',
+    scriptRunBtn: 'Run',
+    scriptRunning: 'Running...',
+    scriptSaveBtn: 'Save',
+    scriptSaveAsPrompt: 'Script name:',
+    scriptDllMissing: 'axium_vm not found — scripts tab unavailable',
+    scriptPickLibBtn: 'Locate engine file...',
+    scriptNoScripts: 'No saved scripts',
+    scriptConsolePlaceholder: 'Script output will appear here after running',
+    scriptDeleteConfirm: 'Delete script "{0}"?',
+    scriptDefaultGreeting: 'Hello from Axium!',
+    scriptDocsBtn: 'API Reference',
+    docsTitle: 'Script API',
+    docsSubtitle: 'Native functions available to Axium scripts',
+    docsEmpty: 'No API available (engine not loaded).',
+    docsSyntaxTitle: 'Syntax',
+    docsExampleTitle: 'Example',
     enterText: 'Enter text...',
     selectFont: 'Select Font',
     fontLayout: 'Font Layout',
@@ -522,8 +616,8 @@ const T: Record<Lang, Strings> = {
     commentSaving: 'Saving',
     commentHiddenElements: 'Hidden camera elements',
     
-    cameraStartedWebAPI: 'Camera started (WebAPI)',
-    cameraStartedNative: 'Camera started (Native)',
+    cameraStartedWebAPI: 'Camera started',
+    cameraStartedNative: 'Camera started',
     
     framesLabel: 'frames',
     symbolsLabel: 'symbols',
@@ -560,7 +654,19 @@ const T: Record<Lang, Strings> = {
     errInvalidImageData: 'Invalid image data',
     vcamNotRunning: 'Virtual camera not running',
     vcamNotStarted: 'Virtual camera not started',
-    
+    vcamBusy: 'Virtual camera is already in use by another application',
+    vcamStartedSoftcam: 'Virtual camera started ({0}) — "DirectShow Softcam" is now visible in Discord/Zoom/OBS',
+    vcamRegistered: 'Virtual camera driver installed! Now start the camera.',
+    vcamRegisterDenied: 'Driver installation cancelled (administrator rights required)',
+    vcamRegisterFailed: 'Failed to register virtual camera driver',
+    vcamInstallPrompt: 'Install the virtual camera driver? The camera will appear in Discord, Zoom, OBS as a real device. Administrator rights required (Windows: softcam, Linux: v4l2loopback module).',
+    vcamInstallBtn: 'Install camera driver',
+    updateAvailable: 'Update available',
+    updateNow: 'Update',
+    updateLater: 'Later',
+    vcamStartedV4l2: 'Virtual camera started ({0}) via v4l2loopback',
+    vcamNoLoopback: 'v4l2loopback device not found. Run: sudo modprobe v4l2loopback exclusive_caps=1 card_label="ASCII Art Camera" (exclusive_caps=1 is required — Discord/browsers will not list the camera without it)',
+
     savingAs: 'Saving as {0}...',
     canvasContextError: 'Canvas context not available',
     blobCreateError: 'Failed to create image blob',
@@ -601,7 +707,7 @@ const T: Record<Lang, Strings> = {
     geometry:'Geometrie & Licht', width:'Breite', fontRatio:'Schriftverhältnis',
     brightness:'Helligkeit', contrast:'Kontrast', gamma:'Gamma',
     symbols:'Symbole & Render', colorRender:'HTML Farb-Render',
-    invert:'Invertieren', viewport:'Ansicht', bgColor:'Hintergrundfarbe',
+    invert:'Invertieren', dithering:'Dithering (Floyd–Steinberg)', viewport:'Ansicht', bgColor:'Hintergrundfarbe',
     player:'ASCII-Player', settings:'Einstellungen', theme:'Thema', font:'Schrift',
     language:'Sprache', resetDefaults:'Zurücksetzen', saveSettings:'Speichern',
     formatTitle:'Format wählen', formatSubImage:'ASCII Format', formatSubVideo:'Ausgabeformat',
@@ -645,8 +751,8 @@ const T: Record<Lang, Strings> = {
     loadingPreview: 'Vorschau wird geladen...',
     previewError: 'Vorschau-Fehler',
     errorLabel: 'Fehler',
-    cameraStartedWebAPI: 'Kamera gestartet (WebAPI)',
-    cameraStartedNative: 'Kamera gestartet (Native)',
+    cameraStartedWebAPI: 'Kamera gestartet',
+    cameraStartedNative: 'Kamera gestartet',
     framesLabel: 'Frames',
     symbolsLabel: 'Symbole',
     
@@ -722,7 +828,7 @@ const T: Record<Lang, Strings> = {
     geometry:'Géométrie & Lumière', width:'Largeur', fontRatio:'Rapport police',
     brightness:'Luminosité', contrast:'Contraste', gamma:'Gamma',
     symbols:'Symboles & Rendu', colorRender:'Rendu HTML couleur',
-    invert:'Inverser', viewport:'Fenêtre', bgColor:'Couleur fond',
+    invert:'Inverser', dithering:'Tramage (Floyd–Steinberg)', viewport:'Fenêtre', bgColor:'Couleur fond',
     player:'Lecteur ASCII', settings:'Paramètres', theme:'Thème', font:'Police',
     language:'Langue', resetDefaults:'Réinitialiser', saveSettings:'Enregistrer',
     formatTitle:'Choisir format', formatSubImage:'Format ASCII', formatSubVideo:'Format sortie',
@@ -766,8 +872,8 @@ const T: Record<Lang, Strings> = {
     loadingPreview: 'Chargement aperçu...',
     previewError: 'Erreur d\'aperçu',
     errorLabel: 'Erreur',
-    cameraStartedWebAPI: 'Caméra démarrée (WebAPI)',
-    cameraStartedNative: 'Caméra démarrée (Native)',
+    cameraStartedWebAPI: 'Caméra démarrée',
+    cameraStartedNative: 'Caméra démarrée',
     framesLabel: 'images',
     symbolsLabel: 'symboles',
     
@@ -843,7 +949,7 @@ const T: Record<Lang, Strings> = {
     geometry:'几何与光线', width:'宽度', fontRatio:'字体比例',
     brightness:'亮度', contrast:'对比度', gamma:'伽马',
     symbols:'符号与渲染', colorRender:'HTML彩色渲染',
-    invert:'反转', viewport:'视口', bgColor:'背景颜色',
+    invert:'反转', dithering:'抖动 (Floyd–Steinberg)', viewport:'视口', bgColor:'背景颜色',
     player:'ASCII播放器', settings:'设置', theme:'主题', font:'字体',
     language:'语言', resetDefaults:'重置', saveSettings:'保存设置',
     formatTitle:'选择格式', formatSubImage:'ASCII格式', formatSubVideo:'输出格式',
@@ -883,8 +989,8 @@ const T: Record<Lang, Strings> = {
     loadingPreview: '正在加载预览...',
     previewError: '预览错误',
     errorLabel: '错误',
-    cameraStartedWebAPI: '摄像头已启动 (WebAPI)',
-    cameraStartedNative: '摄像头已启动 (Native)',
+    cameraStartedWebAPI: '摄像头已启动',
+    cameraStartedNative: '摄像头已启动',
     framesLabel: '帧',
     symbolsLabel: '符号',
     
@@ -960,7 +1066,7 @@ const T: Record<Lang, Strings> = {
     geometry:'ジオメトリと光', width:'幅', fontRatio:'フォント比率',
     brightness:'明るさ', contrast:'コントラスト', gamma:'ガンマ',
     symbols:'シンボルとレンダー', colorRender:'HTMLカラーレンダー',
-    invert:'反転', viewport:'ビューポート', bgColor:'背景色',
+    invert:'反転', dithering:'ディザリング (Floyd–Steinberg)', viewport:'ビューポート', bgColor:'背景色',
     player:'ASCIIプレーヤー', settings:'設定', theme:'テーマ', font:'フォント',
     language:'言語', resetDefaults:'リセット', saveSettings:'設定を保存',
     formatTitle:'保存形式を選択', formatSubImage:'ASCII形式', formatSubVideo:'出力形式',
@@ -1000,8 +1106,8 @@ const T: Record<Lang, Strings> = {
     loadingPreview: 'プレビュー読み込み中...',
     previewError: 'プレビューエラー',
     errorLabel: 'エラー',
-    cameraStartedWebAPI: 'カメラ開始 (WebAPI)',
-    cameraStartedNative: 'カメラ開始 (Native)',
+    cameraStartedWebAPI: 'カメラ開始',
+    cameraStartedNative: 'カメラ開始',
     framesLabel: 'フレーム',
     symbolsLabel: 'シンボル',
     
@@ -1077,7 +1183,7 @@ const T: Record<Lang, Strings> = {
     geometry:'Geometría y Luz', width:'Ancho', fontRatio:'Relación fuente',
     brightness:'Brillo', contrast:'Contraste', gamma:'Gamma',
     symbols:'Símbolos y Render', colorRender:'Render HTML color',
-    invert:'Invertir', viewport:'Ventana', bgColor:'Color fondo',
+    invert:'Invertir', dithering:'Tramado (Floyd–Steinberg)', viewport:'Ventana', bgColor:'Color fondo',
     player:'Reproductor ASCII', settings:'Configuración', theme:'Tema', font:'Fuente',
     language:'Idioma', resetDefaults:'Restablecer', saveSettings:'Guardar config.',
     formatTitle:'Elegir formato', formatSubImage:'Formato ASCII', formatSubVideo:'Formato salida',
@@ -1120,8 +1226,8 @@ const T: Record<Lang, Strings> = {
     loadingPreview: 'Cargando vista previa...',
     previewError: 'Error de vista previa',
     errorLabel: 'Error',
-    cameraStartedWebAPI: 'Cámara iniciada (WebAPI)',
-    cameraStartedNative: 'Cámara iniciada (Native)',
+    cameraStartedWebAPI: 'Cámara iniciada',
+    cameraStartedNative: 'Cámara iniciada',
     framesLabel: 'fotogramas',
     symbolsLabel: 'símbolos',
     
@@ -1197,7 +1303,7 @@ const T: Record<Lang, Strings> = {
     geometry:'Geometria e Luz', width:'Largura', fontRatio:'Proporção fonte',
     brightness:'Brilho', contrast:'Contraste', gamma:'Gama',
     symbols:'Símbolos e Render', colorRender:'Render HTML colorido',
-    invert:'Inverter', viewport:'Janela', bgColor:'Cor fundo',
+    invert:'Inverter', dithering:'Pontilhado (Floyd–Steinberg)', viewport:'Janela', bgColor:'Cor fundo',
     player:'Player ASCII', settings:'Configurações', theme:'Tema', font:'Fonte',
     language:'Idioma', resetDefaults:'Redefinir', saveSettings:'Salvar config.',
     formatTitle:'Escolha o formato', formatSubImage:'Formato ASCII', formatSubVideo:'Formato saída',
@@ -1240,8 +1346,8 @@ const T: Record<Lang, Strings> = {
     loadingPreview: 'Carregando visualização...',
     previewError: 'Erro de visualização',
     errorLabel: 'Erro',
-    cameraStartedWebAPI: 'Câmera iniciada (WebAPI)',
-    cameraStartedNative: 'Câmera iniciada (Native)',
+    cameraStartedWebAPI: 'Câmera iniciada',
+    cameraStartedNative: 'Câmera iniciada',
     framesLabel: 'quadros',
     symbolsLabel: 'símbolos',
     
@@ -1317,7 +1423,7 @@ const T: Record<Lang, Strings> = {
     geometry:'기하학 및 빛', width:'너비', fontRatio:'글꼴 비율',
     brightness:'밝기', contrast:'대비', gamma:'감마',
     symbols:'기호 및 렌더', colorRender:'HTML 컬러 렌더',
-    invert:'반전', viewport:'뷰포트', bgColor:'배경색',
+    invert:'반전', dithering:'디더링 (Floyd–Steinberg)', viewport:'뷰포트', bgColor:'배경색',
     player:'ASCII 플레이어', settings:'설정', theme:'테마', font:'글꼴',
     language:'언어', resetDefaults:'기본값 재설정', saveSettings:'설정 저장',
     formatTitle:'저장 형식 선택', formatSubImage:'ASCII 형식', formatSubVideo:'출력 형식',
@@ -1360,8 +1466,8 @@ const T: Record<Lang, Strings> = {
     loadingPreview: '미리보기 로딩 중...',
     previewError: '미리보기 오류',
     errorLabel: '오류',
-    cameraStartedWebAPI: '카메라 시작됨 (WebAPI)',
-    cameraStartedNative: '카메라 시작됨 (Native)',
+    cameraStartedWebAPI: '카메라 시작됨',
+    cameraStartedNative: '카메라 시작됨',
     framesLabel: '프레임',
     symbolsLabel: '심볼',
     
@@ -1437,7 +1543,7 @@ const T: Record<Lang, Strings> = {
     geometry:'Geometria e Luce', width:'Larghezza', fontRatio:'Rapporto carattere',
     brightness:'Luminosità', contrast:'Contrasto', gamma:'Gamma',
     symbols:'Simboli e Render', colorRender:'Render HTML a colori',
-    invert:'Inverti', viewport:'Viewport', bgColor:'Colore sfondo',
+    invert:'Inverti', dithering:'Retinatura (Floyd–Steinberg)', viewport:'Viewport', bgColor:'Colore sfondo',
     player:'Player ASCII', settings:'Impostazioni', theme:'Tema', font:'Carattere',
     language:'Lingua', resetDefaults:'Ripristina', saveSettings:'Salva impostazioni',
     formatTitle:'Scegli il formato', formatSubImage:'Formato ASCII', formatSubVideo:'Formato output',
@@ -1480,8 +1586,8 @@ const T: Record<Lang, Strings> = {
     loadingPreview: 'Caricamento anteprima...',
     previewError: 'Errore anteprima',
     errorLabel: 'Errore',
-    cameraStartedWebAPI: 'Camera avviata (WebAPI)',
-    cameraStartedNative: 'Camera avviata (Native)',
+    cameraStartedWebAPI: 'Camera avviata',
+    cameraStartedNative: 'Camera avviata',
     framesLabel: 'fotogrammi',
     symbolsLabel: 'simboli',
     
@@ -1562,6 +1668,12 @@ export function t(lang: Lang): Required<Strings> {
   // Fallback для новых полей
   if (!merged.textToAscii) merged.textToAscii = localized.textToAscii || 'Text to ASCII';
   if (!merged.webcamToAscii) merged.webcamToAscii = localized.webcamToAscii || 'Webcam to ASCII';
+  if (!merged.imageMode) merged.imageMode = localized.imageMode || 'Media';
+  if (!merged.textMode) merged.textMode = localized.textMode || 'Text';
+  if (!merged.webcamMode) merged.webcamMode = localized.webcamMode || 'Camera';
+  if (!merged.updateAvailable) merged.updateAvailable = localized.updateAvailable || 'Update available';
+  if (!merged.updateNow) merged.updateNow = localized.updateNow || 'Update';
+  if (!merged.updateLater) merged.updateLater = localized.updateLater || 'Later';
   if (!merged.enterText) merged.enterText = localized.enterText || 'Enter text...';
   if (!merged.selectFont) merged.selectFont = localized.selectFont || 'Select Font';
   if (!merged.fontLayout) merged.fontLayout = localized.fontLayout || 'Font Layout';

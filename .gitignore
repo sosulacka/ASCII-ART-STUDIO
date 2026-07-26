@@ -8,9 +8,18 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
+/dist
 dist-ssr
 *.local
+
+# Rust build output
+/src-tauri/target/
+/installer/target/
+
+# Кастомный установщик: артефакты сборки не коммитим, но installer/dist/
+# (исходный UI установщика) и installer/payload/ (структуру) держим
+dist-installer/
+installer/payload/app.zip
 
 # Editor directories and files
 .vscode/*
@@ -20,5 +29,28 @@ dist-ssr
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 *.sw?
+
+# softcam vendor: держим исходники (vendored, v1.8.1), но не мусор сборки MSVC
+src-tauri/vendor/softcam/**/x64/
+src-tauri/vendor/softcam/**/Win32/
+src-tauri/vendor/softcam/dist/
+src-tauri/vendor/softcam/packages/
+src-tauri/vendor/softcam/.vs/
+!src-tauri/vendor/softcam/softcam.sln
+
+# ─────────────────────────────────────────────────────────────
+# Axium (язык скриптов, закрытый исходный код) — В РЕПОЗИТОРИЙ ПОПАДАЕТ
+# ТОЛЬКО assets/Axium/bin/ (собранные axium_vm.dll/.so). Всё остальное —
+# Rust-крейты VM/компилятора, стандартная библиотека .ax, тестовые
+# примеры — живёт только на диске разработчика и никогда не коммитится.
+# Установщик докачивает бинарники напрямую из этой папки репозитория
+# (см. ensure_axium_dll в installer/src/lib.rs).
+# ─────────────────────────────────────────────────────────────
+assets/Axium/*
+!assets/Axium/bin/
+assets/Axium/bin/**/*.d
+assets/Axium/bin/**/*.pdb
+assets/Axium/bin/**/*.exp
+assets/Axium/bin/**/*.lib
+

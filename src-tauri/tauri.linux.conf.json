@@ -1,0 +1,7 @@
+{
+  "bundle": {
+    "resources": {
+      "../assets/Axium/bin/linux/libaxium_vm.so": "axium/libaxium_vm.so"
+    }
+  }
+}

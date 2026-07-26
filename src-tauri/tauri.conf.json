@@ -34,9 +34,13 @@
       "deb",
       "appimage"
     ],
-    "resources": [
-      "assets/*"
-    ],
+    "resources": {
+      "assets/*": "assets/",
+      "resources/vcam/softcam64.dll": "vcam/softcam64.dll",
+      "resources/vcam/softcam32.dll": "vcam/softcam32.dll",
+      "resources/vcam/softcam-LICENSE.txt": "vcam/softcam-LICENSE.txt",
+      "../licenses/**/*": "licenses/"
+    },
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

@@ -7,25 +7,72 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
+  # ── Windows: собираем кастомный установщик (не NSIS) ──────────────
+  windows-installer:
+    runs-on: windows-latest
     permissions:
       contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: 'windows-latest'
-            args: '--target x86_64-pc-windows-msvc'
-          - platform: 'ubuntu-22.04'
-            args: '--target x86_64-unknown-linux-gnu'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    runs-on: ${{ matrix.platform }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            src-tauri
+            installer
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # Собирает приложение -> zip -> вшивает в кастомный установщик.
+      # Результат: dist-installer/ASCII-Art-Studio-Setup.exe
+      - name: Build custom installer
+        run: npm run build:installer
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: dist-installer/ASCII-Art-Studio-Setup.exe
+
+      - name: Attach installer to release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: dist-installer/ASCII-Art-Studio-Setup.exe
+          name: "ASCII Art Studio ${{ github.ref_name }}"
+          body: |
+            Кастомный установщик для Windows и пакеты для Linux.
+
+            Windows: скачайте ASCII-Art-Studio-Setup.exe и запустите.
+            Установка per-user, без прав администратора.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── Linux: стандартные AppImage / deb ────────────────────────────
+  linux-bundle:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install dependencies (Ubuntu)
-        if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -51,7 +98,7 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.platform == 'windows-latest' && 'x86_64-pc-windows-msvc' || 'x86_64-unknown-linux-gnu' }}
+          targets: x86_64-unknown-linux-gnu
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
@@ -59,16 +106,37 @@ jobs:
           workspaces: 'src-tauri'
 
       - name: Install frontend dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build Tauri app
+      - name: Build Tauri app (Linux)
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_type == 'tag' && github.ref_name || format('manual-{0}', github.sha) }}
           releaseName: "ASCII Art Studio ${{ github.ref_type == 'tag' && github.ref_name || '' }}"
-          releaseBody: 'Автоматическая сборка релиза для Windows и Linux'
+          releaseBody: 'Кастомный установщик для Windows и пакеты для Linux'
           releaseDraft: true
           prerelease: false
-          args: ${{ matrix.args }}
+          args: '--target x86_64-unknown-linux-gnu'
+
+      # Кастомный установщик (тот же UI, что на Windows): собирает payload
+      # и вшивает его в единый self-contained бинарник.
+      - name: Build custom installer (Linux)
+        run: npm run build:installer
+
+      - name: Upload Linux installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-installer
+          path: dist-installer/ASCII-Art-Studio-Setup
+
+      - name: Attach Linux installer to release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: dist-installer/ASCII-Art-Studio-Setup
+          name: "ASCII Art Studio ${{ github.ref_name }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

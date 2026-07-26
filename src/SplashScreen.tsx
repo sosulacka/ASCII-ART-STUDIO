@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Theme } from './themes';
 import type { Lang } from './i18n';
 import { t } from './i18n';
+import Logo from './Logo';
 
 interface SplashProps {
   theme: Theme;
@@ -25,8 +26,9 @@ export default function SplashScreen({ theme, lang, onDone }: SplashProps) {
   const [fadeOut, setFadeOut]      = useState(false);
 
   const steps = STEPS_KEY(lang);
-  // Общее время 8–14 сек, рандомно
-  const totalMs = 8000 + Math.random() * 6000;
+  // Короткий сплэш: реальная загрузка (конфиг+шрифты) занимает <1с,
+  // держать пользователя 8-14 секунд на фейковых шагах — вредительство
+  const totalMs = 1800 + Math.random() * 700;
 
   useEffect(() => {
     // Прогресс-бар
@@ -82,8 +84,8 @@ export default function SplashScreen({ theme, lang, onDone }: SplashProps) {
 ██║░░██║██████╔╝╚█████╔╝██║██║
 ╚═╝░░╚═╝╚═════╝░╚════╝░╚═╝╚═╝`}
           </div>
-          <div className="splash-subtitle" style={{ color: theme.textMuted }}>
-            Art Studio
+          <div className="splash-subtitle" style={{ color: theme.textMuted, display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
+            <Logo size={14} accent={theme.accent} /> Art Studio
           </div>
         </div>
 

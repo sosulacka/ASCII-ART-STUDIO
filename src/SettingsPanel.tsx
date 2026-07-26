@@ -3,6 +3,7 @@ import { X, Upload } from 'lucide-react';
 import { THEMES } from './themes';
 import { LANGUAGES, t, type Lang } from './i18n';
 import { type AppConfig } from './useConfig';
+import { ColorPicker } from './components/ColorPicker';
 
 // ── FlagIcon для рендеринга флагов без Emoji (фикс для Windows) ──
 function FlagIcon({ code }: { code: string }) {
@@ -403,15 +404,7 @@ function ColorRow({ label, val, onChange }: {
   return (
     <div className="setting-row">
       <span className="setting-label">{label}</span>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{
-          width: 24, height: 24, borderRadius: 4,
-          background: val,
-          border: '1px solid var(--border-strong)',
-        }} />
-        <input type="color" value={val} onChange={e => onChange(e.target.value)}
-          className="color-input" />
-      </div>
+      <ColorPicker value={val} onChange={onChange} />
     </div>
   );
 }
@@ -446,42 +439,18 @@ function ThemeEditor({ lang, onClose }: { lang: Lang; onClose: () => void }) {
             <input type="text" value={name} onChange={e => setName(e.target.value)}
               className="text-input" style={{ width: 140 }} />
           </div>
-          <div className="setting-row">
-            <span className="setting-label">{s.themeBgApp}</span>
-            <input type="color" value={colors.bgApp}
-              onChange={e => setColors(prev => ({ ...prev, bgApp: e.target.value }))}
-              className="color-input" />
-          </div>
-          <div className="setting-row">
-            <span className="setting-label">{s.themeBgSidebar}</span>
-            <input type="color" value={colors.bgSidebar}
-              onChange={e => setColors(prev => ({ ...prev, bgSidebar: e.target.value }))}
-              className="color-input" />
-          </div>
-          <div className="setting-row">
-            <span className="setting-label">{s.themeAccent}</span>
-            <input type="color" value={colors.accent}
-              onChange={e => setColors(prev => ({ ...prev, accent: e.target.value }))}
-              className="color-input" />
-          </div>
-          <div className="setting-row">
-            <span className="setting-label">{s.themeTextPrimary}</span>
-            <input type="color" value={colors.textPrimary}
-              onChange={e => setColors(prev => ({ ...prev, textPrimary: e.target.value }))}
-              className="color-input" />
-          </div>
-          <div className="setting-row">
-            <span className="setting-label">{s.themeTextMuted}</span>
-            <input type="color" value={colors.textMuted}
-              onChange={e => setColors(prev => ({ ...prev, textMuted: e.target.value }))}
-              className="color-input" />
-          </div>
-          <div className="setting-row">
-            <span className="setting-label">{s.themeBorder}</span>
-            <input type="color" value={colors.border.startsWith('#') ? colors.border : '#000000'}
-              onChange={e => setColors(prev => ({ ...prev, border: e.target.value }))}
-              className="color-input" />
-          </div>
+          <ColorRow label={s.themeBgApp} val={colors.bgApp}
+            onChange={v => setColors(prev => ({ ...prev, bgApp: v }))} />
+          <ColorRow label={s.themeBgSidebar} val={colors.bgSidebar}
+            onChange={v => setColors(prev => ({ ...prev, bgSidebar: v }))} />
+          <ColorRow label={s.themeAccent} val={colors.accent}
+            onChange={v => setColors(prev => ({ ...prev, accent: v }))} />
+          <ColorRow label={s.themeTextPrimary} val={colors.textPrimary}
+            onChange={v => setColors(prev => ({ ...prev, textPrimary: v }))} />
+          <ColorRow label={s.themeTextMuted} val={colors.textMuted}
+            onChange={v => setColors(prev => ({ ...prev, textMuted: v }))} />
+          <ColorRow label={s.themeBorder} val={colors.border.startsWith('#') ? colors.border : '#000000'}
+            onChange={v => setColors(prev => ({ ...prev, border: v }))} />
         </div>
         <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
           <button className="modal-cancel" onClick={onClose}>{s.cancel}</button>
@@ -668,15 +637,7 @@ export function SettingsPanel({ config, lang, onSave, onReset, onClose, onPalett
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-muted)' }}>
                   <span>{s.s_starsColor}</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <div style={{ width: 14, height: 14, borderRadius: '50%', background: local.starsColor, border: '1px solid var(--border-strong)' }} />
-                    <input
-                      type="color" value={local.starsColor}
-                      onChange={e => upd('starsColor', e.target.value)}
-                      className="color-input"
-                      style={{ width: 28, height: 20, padding: 0 }}
-                    />
-                  </div>
+                  <ColorPicker value={local.starsColor} onChange={v => upd('starsColor', v)} />
                 </div>
               </div>
             )}

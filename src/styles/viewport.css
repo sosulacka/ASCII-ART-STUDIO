@@ -1,0 +1,233 @@
+/* ════════════════════════════════════════════════════════════
+   ПЛЕЕР
+════════════════════════════════════════════════════════════ */
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  justify-content: center;
+}
+.player-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--sp-2) var(--sp-3);
+  display: flex;
+  align-items: center;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.player-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+.player-btn--main {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+  padding: var(--sp-2) var(--sp-5);
+  box-shadow: var(--glow-sm);
+}
+.player-btn--main:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--accent-text);
+  box-shadow: var(--glow);
+}
+.frame-info {
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ════════════════════════════════════════════════════════════
+   СТАТУС
+════════════════════════════════════════════════════════════ */
+.status-bar {
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--text-disabled);
+  border-top: 1px solid var(--border);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+/* Прогресс рендера видео (события render-progress из Rust) */
+.render-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.render-progress-track {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--slider-track);
+  overflow: hidden;
+}
+
+.render-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  transition: width var(--dur) var(--ease);
+}
+
+.render-progress-label {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+/* ════════════════════════════════════════════════════════════
+   VIEWPORT
+════════════════════════════════════════════════════════════ */
+.viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+/* Тонкая сетка-подложка (blueprint-вайб терминала). Очень слабая. */
+.viewport::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+  z-index: 0;
+}
+.viewport-inner {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: var(--sp-8);
+  z-index: 1;
+}
+.ascii-output {
+  font-family: var(--font-mono);
+  white-space: pre;
+  display: inline-block;
+  user-select: text !important;
+}
+.ascii-output::selection {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+.ascii-output *::selection {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+/* Лёгкое свечение ASCII-текста — терминальный CRT-вайб */
+.ascii-output--plain {
+  color: var(--text-primary);
+  text-shadow: var(--glow-sm);
+}
+
+/* ── SUB-SIDEBAR & MODES CSS ── */
+.sidebar-header-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.back-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-radius: 4px;
+  transition: background 0.12s, color 0.12s;
+  flex-shrink: 0;
+}
+.back-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.text-ascii-input {
+  width: 100%;
+  min-height: 70px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 12px;
+  color: var(--text-primary);
+  outline: none;
+  resize: vertical;
+  font-family: var(--font-ui);
+  transition: border-color 0.12s, background 0.12s;
+}
+.text-ascii-input:focus {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+}
+.font-preview-box {
+  margin-top: 4px;
+  padding: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  line-height: 1.0;
+  white-space: pre;
+  overflow-x: auto;
+  color: var(--text-secondary);
+  max-height: 120px;
+}
+.webcam-stream {
+  display: none;
+}
+
+
+.viewport-badges {
+  position: absolute;
+  top: var(--sp-4); right: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  align-items: flex-end;
+  pointer-events: none;
+}
+.badge {
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  background: rgba(4,10,7,0.7);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-1) var(--sp-3);
+  backdrop-filter: blur(8px);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge--active {
+  color: var(--accent);
+  border-color: var(--border-strong);
+  box-shadow: var(--glow-sm);
+  text-shadow: var(--glow-text);
+}
+

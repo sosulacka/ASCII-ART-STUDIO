@@ -1,0 +1,101 @@
+/* ════════════════════════════════════════════════════════════
+   СБРОС
+════════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-app);
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior: none;
+  overflow: hidden;
+  transition: background var(--dur-slow) var(--ease), color var(--dur-slow) var(--ease);
+  user-select: none;
+}
+
+/* Единое кольцо фокуса для доступности (клавиатурная навигация) */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   КОРЕНЬ ПРИЛОЖЕНИЯ
+════════════════════════════════════════════════════════════ */
+.app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Neo-terminal: тонкий scanline-оверлей поверх всего окна (CRT-вайб).
+   Только для терминальных тем — см. [data-terminal-fx] в tokens.css.
+   Очень слабый, чтобы не мешать чтению ASCII. pointer-events отключены. */
+[data-terminal-fx] .app-root::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0) 0px,
+    rgba(0,0,0,0) 2px,
+    rgba(0,0,0,0.10) 3px,
+    rgba(0,0,0,0) 4px
+  );
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   СКРОЛЛБАР
+════════════════════════════════════════════════════════════ */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 0;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ════════════════════════════════════════════════════════════
+   ГРИД
+════════════════════════════════════════════════════════════ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
+
+/* ════════════════════════════════════════════════════════════
+   СПИННЕР
+════════════════════════════════════════════════════════════ */
+.spinner {
+  display: inline-block;
+  width: 11px; height: 11px;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+

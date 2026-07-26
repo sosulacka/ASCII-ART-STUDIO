@@ -69,17 +69,24 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Build Tauri app
+      - name: Build custom installer (Windows)
+        if: matrix.platform == 'windows-latest'
+        run: npm run build:installer
+
+      - name: Build Tauri app (Linux)
+        if: matrix.platform == 'ubuntu-22.04'
         run: npm run tauri build -- --target ${{ matrix.target }}
+
+      - name: Build custom installer (Linux)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: npm run build:installer
 
       - name: Upload artifacts (Windows)
         if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: windows-build
-          path: |
-            src-tauri/target/${{ matrix.target }}/release/bundle/nsis/*.exe
-            src-tauri/target/${{ matrix.target }}/release/bundle/msi/*.msi
+          name: windows-installer
+          path: dist-installer/ASCII-Art-Studio-Setup.exe
 
       - name: Upload artifacts (Linux)
         if: matrix.platform == 'ubuntu-22.04'
@@ -89,3 +96,4 @@ jobs:
           path: |
             src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb
             src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage
+            dist-installer/ASCII-Art-Studio-Setup

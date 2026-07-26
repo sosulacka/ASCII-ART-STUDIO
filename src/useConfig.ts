@@ -23,7 +23,7 @@ export interface AppConfig {
 export const DEFAULT_CONFIG: AppConfig = {
   themeId: 'dark',
   lang: 'ru',
-  fontFamily: 'Consolas',
+  fontFamily: 'Inter',
   showStars: true,
   starsCount: 100,
   starsMinSize: 1.0,

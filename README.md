@@ -5,16 +5,16 @@
 ```
  ╔═══════════════════════════════════════════════════════════════╗
  ║                                                               ║
- ║         Professional Desktop Application for ASCII Art        ║
+ ║         Professional Desktop Application for ASCII Art         ║
  ║                                                               ║
- ║   Transform images and videos into stunning ASCII art with    ║
- ║      real-time webcam support and virtual camera features     ║
+ ║   Transform images and videos into ASCII art with real-time   ║
+ ║      webcam support and a true system virtual camera          ║
  ║                                                               ║
  ╚═══════════════════════════════════════════════════════════════╝
 ```
 
-[![Tauri](https://img.shields.io/badge/Tauri-2.0-blue.svg)](https://tauri.app)
-[![React](https://img.shields.io/badge/React-19.1-61dafb.svg)](https://reactjs.org)
+[![Tauri](https://img.shields.io/badge/Tauri-2-blue.svg)](https://tauri.app)
+[![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://reactjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6.svg)](https://www.typescriptlang.org)
 [![Rust](https://img.shields.io/badge/Rust-2021-orange.svg)](https://www.rust-lang.org)
 
@@ -29,227 +29,233 @@
 
 ### ═══ Overview
 
-ASCII Art Studio is a powerful desktop application that converts images, videos, and real-time webcam feeds into ASCII art. 
-Built with modern technologies including Tauri, React, and Rust, it offers professional-grade features with solid performance.
+ASCII Art Studio is a desktop application that converts images, videos, and a
+live webcam feed into ASCII art. Built with Tauri, React, and Rust, the heavy
+image processing runs in Rust (parallelised across CPU cores), while the UI
+stays fast and responsive.
+
+The virtual camera is a **real DirectShow device** on Windows (via the bundled
+softcam driver) — it appears directly in Discord, Zoom, OBS, and browsers as an
+ordinary camera. No external streaming software required.
 
 ### ═══ Key Features
 
 ```
-┌─ Image Conversion      │ Transform any image into ASCII art with customizable parameters
-├─ Video Processing      │ Convert entire videos frame-by-frame with preserved FPS
-├─ Real-time Webcam      │ Live ASCII art rendering from your camera
-├─ Virtual Camera        │ Stream ASCII art to other applications (OBS, Zoom, etc.)
-├─ Multiple Palettes     │ 5 built-in palettes plus custom palette support
-├─ Color Support         │ Full color ASCII art with RGB preservation
-├─ Fine-tuning Controls  │ Adjust brightness, contrast, gamma, invert, and more
-├─ Multilingual          │ Full support for 10 languages (EN, RU, DE, FR, ZH, JA, ES, PT, KO, IT)
-├─ Export Options        │ Save as text, image, or video (MP4/GIF)
-├─ Figlet Text           │ Generate ASCII text art with 50+ fonts
-└─ Multiple Themes       │ 28 themes: Dark, Light, Matrix, Retro, Cyberpunk, and more
+┌─ Image Conversion      │ Turn any image into ASCII art with fine-grained control
+├─ Video Processing      │ Convert whole videos frame-by-frame (parallelised) with FPS kept
+├─ Real-time Webcam      │ Live ASCII rendering from your camera (conversion done in Rust)
+├─ True Virtual Camera   │ Real DirectShow device — pick it directly in Discord/Zoom/OBS
+├─ 6 Palettes            │ Standard, Ultra, Detailed, Blocks, Binary, Braille + custom
+├─ Dithering             │ Floyd–Steinberg dithering for smooth gradients on small palettes
+├─ Color Support         │ Full-color ASCII with RGB preservation
+├─ Fine-tuning           │ Width, font ratio, brightness, contrast, gamma, invert
+├─ Multilingual          │ 10 languages (EN, RU, DE, FR, ZH, JA, ES, PT, KO, IT)
+├─ Export Options        │ TXT, MD, HTML, PNG, GIF, MP4
+├─ Figlet Text           │ ASCII text art with 400+ fonts (downloaded on demand + cached)
+├─ Axium Scripting       │ Built-in IDE for the Axium scripting language: automate conversions, batch export
+├─ Auto-Updates          │ Checks the repo on launch and every 15 minutes
+└─ 28 Themes             │ Dark, Light, Matrix, Dracula, Monokai, Gruvbox, and more
 ```
 
 ### ═══ Technology Stack
 
 **Frontend:**
-- React 19.1 with TypeScript
-- Vite for fast development
-- Tailwind CSS for styling
+- React 19 with TypeScript
+- Vite for the dev server and build
 - Lucide React for icons
+- Local fonts: Inter (UI) and JetBrains Mono (mono), bundled — no network needed
 
-**Backend:**
-- Rust with Tauri 2.0
-- CPU-based image processing with `image` and `imageproc` crates
-- Async runtime with Tokio
-- Axum for HTTP server (virtual camera)
-- V4L2 support for Linux cameras
+**Backend (Rust / Tauri 2):**
+- CPU image processing with the `image` and `imageproc` crates
+- Parallel frame rendering via `rayon`
+- Tokio async runtime, `axum` for the MJPEG fallback server
+- Virtual camera: bundled **softcam** DirectShow driver (Windows), **v4l2loopback** (Linux)
+- Scripting: **Axium VM** loaded at runtime as a dynamic library (`axium_vm.dll` / `libaxium_vm.so`)
+- `ureq` for update checks and downloads
 
 ### ═══ System Requirements
 
-**All Platforms:**
-- Node.js 18+ and npm
-- Rust 1.70+ (installed automatically via Tauri)
-
 **Windows:**
 - Windows 10/11 (64-bit)
-- WebView2 (usually pre-installed)
+- WebView2 (pre-installed on Windows 11; auto-installed otherwise)
+- FFmpeg — optional, only needed for video/GIF/MP4 processing (the app can install it for you)
 
 **Linux:**
 - Ubuntu 20.04+ or equivalent
-- GTK 3.24+
-- WebKitGTK 2.40+
-- v4l2loopback (for virtual camera)
+- GTK 3.24+, WebKitGTK 2.40+
+- v4l2loopback (for the virtual camera), FFmpeg (for video)
 
-**macOS:**
-- macOS 10.15 (Catalina) or later
+### ═══ Install (end users)
 
-### ═══ Quick Start
+**Windows:** download `ASCII-Art-Studio-Setup.exe` from the
+[Releases](https://github.com/sosulacka/ASCII-ART-STUDIO/releases) page and run it.
 
-#### ▸ Installation
+**Linux:** either install the `.deb` / AppImage, or download the
+`ASCII-Art-Studio-Setup` binary (same custom installer UI as on Windows,
+per-user, no root required):
+```bash
+chmod +x ASCII-Art-Studio-Setup && ./ASCII-Art-Studio-Setup
+```
+
+The installer is **per-user** — Windows: `%LOCALAPPDATA%\Programs`,
+Linux: `~/.local/share/ASCIIArtStudio` — and **does not require
+administrator/root rights**. On Windows the app registers itself in
+"Add or remove programs"; on Linux a menu entry and `uninstall.sh` are created.
+
+The app checks for updates automatically (on launch and every 15 minutes) and
+can download and apply them in place.
+
+### ═══ Build from Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/sosulacka/ASCII-ART-STUDIO-.git
-cd ASCII-ART-STUDIO-
+git clone https://github.com/sosulacka/ASCII-ART-STUDIO.git
+cd ASCII-ART-STUDIO
 
 # Install dependencies
 npm install
 ```
 
-#### ▸ Development
-
+**Development:**
 ```bash
-# Run in development mode with hot reload
+# Run with hot reload
 npm run dev
 ```
+Frontend changes hot-reload; Rust changes require a restart.
 
-The application will open automatically. Changes to the frontend will hot-reload, Rust changes require restart.
-
-#### ▸ Building
-
+**Build the app (no bundle):**
 ```bash
-# Build production version
-npm run build
-
-# Build Tauri app for your platform
 npm run tauri build
 ```
+Output goes to `src-tauri/target/release/`.
 
-Built applications will be in `src-tauri/target/release/bundle/`
-
-### ═══ Platform-Specific Setup
-
-#### ▸ Windows
-
-No additional setup required. The application works out of the box.
-
-For virtual camera support, you can use the built-in HTTP streaming server that works with OBS Studio as a Browser Source.
-
-#### ▸ Linux
-
-For native camera support:
+**Build the custom installer (Windows):**
 ```bash
-sudo apt-get install libv4l-dev v4l-utils
+npm run build:installer
 ```
+This builds the app, packs it, and embeds it into a single self-contained
+`dist-installer/ASCII-Art-Studio-Setup.exe`.
 
-For virtual camera (v4l2loopback):
+### ═══ Platform Notes
+
+**Windows — virtual camera driver:**
+The bundled softcam DirectShow driver must be registered once. The app offers a
+one-click "Install camera driver" button (asks for administrator rights via UAC
+just for that step). After that, "DirectShow Softcam" appears in any app's
+camera list — restart the target app (Discord/Zoom/browser) so it re-scans
+cameras. No system reboot needed.
+
+**Linux — virtual camera:**
 ```bash
-# Install v4l2loopback
-sudo apt-get install v4l2loopback-dkms
+# Native camera support
+sudo apt-get install libv4l-dev v4l-utils
 
-# Load the module
-sudo modprobe v4l2loopback devices=1 video_nr=10 card_label="ASCII Art Camera"
+# Virtual camera device
+sudo apt-get install v4l2loopback-dkms
+sudo modprobe v4l2loopback devices=1 video_nr=10 card_label="ASCII Art Camera" exclusive_caps=1
 
 # Make it persistent
 echo "v4l2loopback" | sudo tee /etc/modules-load.d/v4l2loopback.conf
-echo "options v4l2loopback devices=1 video_nr=10 card_label='ASCII Art Camera'" | sudo tee /etc/modprobe.d/v4l2loopback.conf
+echo "options v4l2loopback devices=1 video_nr=10 card_label='ASCII Art Camera' exclusive_caps=1" | sudo tee /etc/modprobe.d/v4l2loopback.conf
 ```
 
-For GTK/WebKitGTK:
+**Linux — GTK/WebKitGTK (build):**
 ```bash
 sudo apt-get install libgtk-3-dev libwebkit2gtk-4.1-dev
 ```
 
-#### ▸ macOS
-
-```bash
-# Install Xcode Command Line Tools
-xcode-select --install
-
-# Dependencies are managed by Homebrew (optional)
-brew install pkg-config
-```
-
 ### ═══ Usage Guide
 
-#### ▸ Image Processing
-1. Click **"Open Image"** or drag & drop an image
-2. Adjust settings: width, palette, brightness, contrast, gamma
-3. Preview the result in real-time
-4. Export as text, PNG, or copy to clipboard
+**Image / Video (Media tab):**
+1. Open an image or video (or drag & drop)
+2. Adjust width, palette, brightness, contrast, gamma; toggle color, invert, dithering
+3. Preview updates live
+4. Export as TXT, HTML, PNG, GIF, MP4, or copy to clipboard
 
-#### ▸ Video Processing
-1. Click **"Open Video"**
-2. Configure quality settings
-3. Process video (may take time depending on length)
-4. Play back with controls
-5. Export as MP4 or GIF
+**Text (Figlet):**
+1. Type your text, pick one of 400+ Figlet fonts
+2. Export as TXT, MD, PNG, or GIF
 
-#### ▸ Webcam Mode
-1. Click **"Start Camera"**
-2. Real-time ASCII art preview
-3. Optionally start **Virtual Camera** to stream to other apps
-4. Virtual camera available at `http://localhost:8765/stream`
+**Camera:**
+1. Start the camera — live ASCII preview (converted in Rust for low CPU)
+2. Start the **Virtual Camera** to expose it system-wide
+3. In Windows apps, select "DirectShow Softcam"; if no driver is registered,
+   use the in-app "Install camera driver" button first
+4. On Linux, the virtual camera is a **real V4L2 device** (via v4l2loopback) —
+   it appears as an ordinary camera in Discord/OBS/browsers. Load the module
+   first (see Platform Notes)
+5. If no backend is available (driver/module missing), the app falls back to
+   an MJPEG stream at `http://localhost:8765/stream` (usable as an OBS
+   Browser Source)
 
-#### ▸ Virtual Camera Integration
-- **OBS Studio**: Add Browser Source → `http://localhost:8765/stream`
-- **VLC**: Media → Open Network Stream → `http://localhost:8765/stream`
-- **Zoom/Discord**: Use OBS Virtual Camera with the browser source
+**Scripts (Axium):**
+1. Open the Scripts tab — a full IDE for the Axium scripting language (AXL):
+   syntax highlighting, autocompletion, and inline compile diagnostics
+2. Write a script (or start from the template) and press **Run** — output
+   appears in the console below the editor
+3. Scripts can call into the app: convert pixel buffers to ASCII with the real
+   conversion engine, save TXT/PNG files, show toasts, switch themes
+4. Press the **API Reference** button for the built-in docs: AXL syntax
+   (`([ ])` blocks, `.` statement terminator, `;string;` literals) and every
+   available native function with descriptions
+5. Scripts are saved to your user config directory as `.ax` files
+
+> The Axium language engine is closed-source; the app ships only the compiled
+> VM binary (`assets/Axium/bin/`), which the installer downloads. The app looks
+> for it next to the executable, in bundle resources, and in your config
+> directory — if it is still missing, the Scripts tab offers a
+> **"Locate engine file..."** button to pick the `.dll`/`.so` manually
+> (the path is remembered).
 
 ### ═══ Customization
 
-#### ▸ Custom Palettes
-Create your own ASCII palettes in Settings:
-- Characters sorted from darkest to brightest
-- Example: ` .:-=+*#%@` (simple) or full extended ASCII
-
-#### ▸ Themes
-Switch between 28 themes in Settings:
-- **Dark/Light**: Modern interfaces
-- **Retro/Terminal**: Nostalgic CRT styles  
-- **Dracula/Monokai/Gruvbox**: Popular code editor themes
-- And 20+ more options
+**Custom palettes** — characters ordered darkest → brightest, e.g. ` .:-=+*#%@`.
+**28 themes** with a built-in theme editor (edit colors with a custom color
+picker, save your own).
 
 ### ═══ Performance Notes
 
-**Processing Method:**
-- All image/video processing is done on CPU (JavaScript + Rust)
-- No GPU acceleration is used
-- Performance depends on CPU speed and image resolution
-
-**Optimization Tips:**
-- Use lower width values (80-120) for real-time processing
-- Shorter palettes (10 chars) are faster than detailed ones (70-92 chars)
-- Color rendering is slower than monochrome
-- Close other applications to free up CPU resources
+- Webcam conversion runs entirely in Rust with lookup tables; the render loop is
+  throttled to the camera FPS to avoid burning CPU
+- Video export renders frames in parallel across all CPU cores (`rayon`)
+- Lower width (80–120) and shorter palettes are faster; color is slower than mono
 
 ### ═══ Troubleshooting
 
-**Camera not detected (Windows):**
-- Check camera permissions in Windows Settings
-- Ensure no other application is using the camera
+**Virtual camera shows a black screen:** make sure the camera is running in the
+app first (the driver is always visible to other apps, but shows black until the
+app feeds it frames). Restart the target app so it re-scans cameras.
+
+**Camera not detected (Windows):** check camera permissions in Windows Settings
+and make sure no other app holds the camera.
 
 **Virtual camera not working (Linux):**
-- Verify v4l2loopback is loaded: `lsmod | grep v4l2loopback`
-- Check /dev/video devices: `ls /dev/video*`
+```bash
+lsmod | grep v4l2loopback   # module loaded?
+ls /dev/video*              # device present?
+```
 
-**Build errors:**
-- Clear cache: `rm -rf node_modules target` and reinstall
-- Update Rust: `rustup update`
-- Update Node: Use Node 18 LTS or later
-
-**Performance issues:**
-- Reduce resolution/width for faster processing
-- Close other heavy applications
-- Use smaller palettes for better performance
+**Build errors:** `rustup update`, use Node 18 LTS or later, and clear caches
+with `rm -rf node_modules src-tauri/target` before reinstalling.
 
 ### ═══ License
 
-This project is open source. See LICENSE file for details.
+Open source under the MIT License. See the `LICENSE` file. Third-party
+components (softcam, DejaVu Sans Mono, Inter, JetBrains Mono, Lucide) are
+documented under `licenses/` with their respective licenses.
 
 ### ═══ Author
 
-**Discord**: @syswow64deleted
-
-Feel free to reach out for questions, suggestions, or collaboration.
+**Discord:** @syswow64deleted
 
 ### ═══ Acknowledgments
 
-Built with:
-- [Tauri](https://tauri.app) - Desktop app framework
-- [React](https://reactjs.org) - UI library
-- [Rust](https://www.rust-lang.org) - Systems programming language
-- [image-rs](https://github.com/image-rs/image) - Image processing
-
+- [Tauri](https://tauri.app) — desktop app framework
+- [React](https://reactjs.org) — UI library
+- [Rust](https://www.rust-lang.org) — systems language
+- [image-rs](https://github.com/image-rs/image) — image processing
+- [softcam](https://github.com/tshino/softcam) — DirectShow virtual camera (MIT)
+- [figlet.js](https://github.com/patorjk/figlet.js) — Figlet text rendering
 
 ---
 
@@ -258,229 +264,234 @@ Built with:
 
 ### ═══ Обзор
 
-ASCII Art Studio — это мощное десктопное приложение, которое конвертирует изображения, видео и данные с веб-камеры в ASCII-арт в реальном времени. 
-Построено на современных технологиях: Tauri, React и Rust, предлагает профессиональные функции с надёжной производительностью.
+ASCII Art Studio — десктопное приложение, которое превращает изображения, видео
+и живой поток с веб-камеры в ASCII-арт. Построено на Tauri, React и Rust:
+тяжёлая обработка изображений выполняется в Rust (параллельно на всех ядрах CPU),
+а интерфейс остаётся быстрым.
+
+Виртуальная камера на Windows — это **настоящее DirectShow-устройство** (через
+встроенный драйвер softcam): она видна прямо в Discord, Zoom, OBS и браузерах
+как обычная камера. Внешнее ПО для стриминга не нужно.
 
 ### ═══ Ключевые возможности
 
 ```
-┌─ Конвертация изображений    │ Превращайте любое изображение в ASCII-арт
-├─ Обработка видео            │ Конвертируйте целые видео покадрово с сохранением FPS
-├─ Веб-камера в реальном времени │ Живой рендеринг ASCII-арта с вашей камеры
-├─ Виртуальная камера         │ Транслируйте ASCII-арт в другие приложения (OBS, Zoom)
-├─ Множество палитр           │ 5 встроенных палитр плюс пользовательские
-├─ Цветная поддержка          │ Полноцветный ASCII-арт с сохранением RGB
-├─ Точная настройка           │ Регулируйте яркость, контраст, гамму, инверсию и многое другое
-├─ Мультиязычность            │ Полная поддержка 10 языков (RU, EN, DE, FR, ZH, JA, ES, PT, KO, IT)
-├─ Опции экспорта             │ Сохранение как текст, изображение или видео (MP4/GIF)
-├─ Figlet текст               │ Генерируйте ASCII текст-арт с более чем 50 шрифтами
-└─ Множество тем              │ 28 тем: Темная, Светлая, Matrix, Ретро, Киберпанк и другие
+┌─ Конвертация изображений │ Любое изображение в ASCII с точной настройкой
+├─ Обработка видео         │ Видео покадрово (параллельно) с сохранением FPS
+├─ Веб-камера в реальном времени │ Живой ASCII с камеры (конверсия в Rust)
+├─ Настоящая вирт. камера  │ DirectShow-устройство — выбирается прямо в Discord/Zoom/OBS
+├─ 6 палитр                │ Стандарт, Ультра, Детальная, Блоки, Бинарная, Брайль + свои
+├─ Дизеринг               │ Флойд–Стейнберг для плавных градиентов на малых палитрах
+├─ Цветной режим           │ Полноцветный ASCII с сохранением RGB
+├─ Точная настройка        │ Ширина, пропорции шрифта, яркость, контраст, гамма, инверсия
+├─ Мультиязычность         │ 10 языков (RU, EN, DE, FR, ZH, JA, ES, PT, KO, IT)
+├─ Экспорт                 │ TXT, MD, HTML, PNG, GIF, MP4
+├─ Figlet-текст            │ ASCII-текст с 400+ шрифтами (докачка по требованию + кэш)
+├─ Скриптинг Axium         │ Встроенная IDE для языка скриптов Axium: автоматизация конверсий, батч-экспорт
+├─ Автообновление          │ Проверка репозитория при запуске и каждые 15 минут
+└─ 28 тем                  │ Тёмная, Светлая, Matrix, Dracula, Monokai, Gruvbox и другие
 ```
 
 ### ═══ Технологический стек
 
 **Фронтенд:**
-- React 19.1 с TypeScript
-- Vite для быстрой разработки
-- Tailwind CSS для стилизации
+- React 19 с TypeScript
+- Vite для dev-сервера и сборки
 - Lucide React для иконок
+- Локальные шрифты Inter (UI) и JetBrains Mono (моно) — встроены, сеть не нужна
 
-**Бэкенд:**
-- Rust с Tauri 2.0
+**Бэкенд (Rust / Tauri 2):**
 - CPU-обработка изображений через `image` и `imageproc`
-- Асинхронный runtime с Tokio
-- Axum для HTTP сервера (виртуальная камера)
-- Поддержка V4L2 для Linux камер
-
+- Параллельный рендеринг кадров через `rayon`
+- Асинхронный runtime Tokio, `axum` для MJPEG-фоллбека
+- Виртуальная камера: встроенный драйвер **softcam** (Windows), **v4l2loopback** (Linux)
+- Скриптинг: **Axium VM**, подгружается в рантайме как динамическая библиотека (`axium_vm.dll` / `libaxium_vm.so`)
+- `ureq` для проверки и загрузки обновлений
 
 ### ═══ Системные требования
 
-**Все платформы:**
-- Node.js 18+ и npm
-- Rust 1.70+ (устанавливается автоматически через Tauri)
-
 **Windows:**
 - Windows 10/11 (64-bit)
-- WebView2 (обычно предустановлен)
+- WebView2 (предустановлен на Windows 11, иначе ставится автоматически)
+- FFmpeg — опционально, только для обработки видео/GIF/MP4 (приложение может установить его само)
 
 **Linux:**
 - Ubuntu 20.04+ или эквивалент
-- GTK 3.24+
-- WebKitGTK 2.40+
-- v4l2loopback (для виртуальной камеры)
+- GTK 3.24+, WebKitGTK 2.40+
+- v4l2loopback (для виртуальной камеры), FFmpeg (для видео)
 
-**macOS:**
-- macOS 10.15 (Catalina) или новее
+### ═══ Установка (для пользователей)
 
-### ═══ Быстрый старт
+**Windows:** скачайте `ASCII-Art-Studio-Setup.exe` со страницы
+[Releases](https://github.com/sosulacka/ASCII-ART-STUDIO/releases) и запустите.
 
-#### ▸ Установка
+**Linux:** установите `.deb` / AppImage, либо скачайте бинарник
+`ASCII-Art-Studio-Setup` (тот же кастомный установщик, что и на Windows,
+per-user, без root):
+```bash
+chmod +x ASCII-Art-Studio-Setup && ./ASCII-Art-Studio-Setup
+```
+
+Установщик **per-user** — Windows: `%LOCALAPPDATA%\Programs`,
+Linux: `~/.local/share/ASCIIArtStudio` — и **не требует прав
+администратора/root**. На Windows приложение регистрируется в «Установка и
+удаление программ»; на Linux создаются пункт меню и `uninstall.sh`.
+
+Приложение проверяет обновления автоматически (при запуске и каждые 15 минут)
+и может скачать и применить их на месте.
+
+### ═══ Сборка из исходников
 
 ```bash
 # Клонируйте репозиторий
-git clone https://github.com/sosulacka/ASCII-ART-STUDIO-.git
-cd ASCII-ART-STUDIO-
+git clone https://github.com/sosulacka/ASCII-ART-STUDIO.git
+cd ASCII-ART-STUDIO
 
 # Установите зависимости
 npm install
 ```
 
-#### ▸ Разработка
-
+**Разработка:**
 ```bash
-# Запустите в режиме разработки с hot reload
+# Запуск с hot reload
 npm run dev
 ```
+Фронтенд обновляется на лету; изменения в Rust требуют перезапуска.
 
-Приложение откроется автоматически. Изменения во фронтенде обновятся автоматически, изменения в Rust требуют перезапуска.
-
-#### ▸ Сборка
-
+**Сборка приложения:**
 ```bash
-# Соберите production версию
-npm run build
-
-# Соберите Tauri приложение для вашей платформы
 npm run tauri build
 ```
+Результат — в `src-tauri/target/release/`.
 
-Собранные приложения будут в `src-tauri/target/release/bundle/`
-
-### ═══ Настройка для конкретных платформ
-
-#### ▸ Windows
-
-Дополнительная настройка не требуется. Приложение работает сразу после установки.
-
-Для поддержки виртуальной камеры используется встроенный HTTP-сервер потоковой передачи, который работает с OBS Studio как Browser Source.
-
-#### ▸ Linux
-
-Для поддержки нативной камеры:
+**Сборка кастомного установщика (Windows):**
 ```bash
+npm run build:installer
+```
+Собирает приложение, упаковывает и вшивает в единый самодостаточный
+`dist-installer/ASCII-Art-Studio-Setup.exe`.
+
+### ═══ Особенности платформ
+
+**Windows — драйвер виртуальной камеры:**
+Встроенный DirectShow-драйвер softcam нужно один раз зарегистрировать. В
+приложении есть кнопка «Установить драйвер камеры» (запросит права
+администратора через UAC только для этого шага). После этого «DirectShow
+Softcam» появится в списке камер — перезапустите целевое приложение
+(Discord/Zoom/браузер), чтобы оно пересканировало камеры. Перезагрузка ПК не нужна.
+
+**Linux — виртуальная камера:**
+```bash
+# Поддержка нативной камеры
 sudo apt-get install libv4l-dev v4l-utils
-```
 
-Для виртуальной камеры (v4l2loopback):
-```bash
-# Установите v4l2loopback
+# Устройство виртуальной камеры
 sudo apt-get install v4l2loopback-dkms
+sudo modprobe v4l2loopback devices=1 video_nr=10 card_label="ASCII Art Camera" exclusive_caps=1
 
-# Загрузите модуль
-sudo modprobe v4l2loopback devices=1 video_nr=10 card_label="ASCII Art Camera"
-
-# Сделайте это постоянным
+# Сделать постоянным
 echo "v4l2loopback" | sudo tee /etc/modules-load.d/v4l2loopback.conf
-echo "options v4l2loopback devices=1 video_nr=10 card_label='ASCII Art Camera'" | sudo tee /etc/modprobe.d/v4l2loopback.conf
+echo "options v4l2loopback devices=1 video_nr=10 card_label='ASCII Art Camera' exclusive_caps=1" | sudo tee /etc/modprobe.d/v4l2loopback.conf
 ```
 
-Для GTK/WebKitGTK:
+**Linux — GTK/WebKitGTK (сборка):**
 ```bash
 sudo apt-get install libgtk-3-dev libwebkit2gtk-4.1-dev
 ```
 
-#### ▸ macOS
-
-```bash
-# Установите Xcode Command Line Tools
-xcode-select --install
-
-# Зависимости управляются через Homebrew (опционально)
-brew install pkg-config
-```
-
 ### ═══ Руководство по использованию
 
-#### ▸ Обработка изображений
-1. Нажмите **"Открыть изображение"** или перетащите изображение
-2. Настройте параметры: ширину, палитру, яркость, контраст, гамму
-3. Просмотрите результат в реальном времени
-4. Экспортируйте как текст, PNG или скопируйте в буфер обмена
+**Изображение / Видео (вкладка «Медиа»):**
+1. Откройте изображение или видео (или перетащите)
+2. Настройте ширину, палитру, яркость, контраст, гамму; переключите цвет,
+   инверсию, дизеринг
+3. Предпросмотр обновляется в реальном времени
+4. Экспорт в TXT, HTML, PNG, GIF, MP4 или копирование в буфер
 
-#### ▸ Обработка видео
-1. Нажмите **"Открыть видео"**
-2. Настройте параметры качества
-3. Обработайте видео (может занять время в зависимости от длины)
-4. Воспроизведите с элементами управления
-5. Экспортируйте как MP4 или GIF
+**Текст (Figlet):**
+1. Введите текст, выберите один из 400+ Figlet-шрифтов
+2. Экспорт в TXT, MD, PNG или GIF
 
-#### ▸ Режим веб-камеры
-1. Нажмите **"Запустить камеру"**
-2. Предварительный просмотр ASCII-арта в реальном времени
-3. Опционально запустите **Виртуальную камеру** для трансляции в другие приложения
-4. Виртуальная камера доступна по адресу `http://localhost:8765/stream`
+**Камера:**
+1. Запустите камеру — живой ASCII-предпросмотр (конверсия в Rust, низкий CPU)
+2. Включите **Виртуальную камеру**, чтобы отдавать её в систему
+3. В приложениях Windows выберите «DirectShow Softcam»; если драйвер не
+   зарегистрирован — сначала нажмите «Установить драйвер камеры»
+4. На Linux виртуальная камера — **настоящее V4L2-устройство** (через
+   v4l2loopback): видна как обычная камера в Discord/OBS/браузерах.
+   Сначала загрузите модуль (см. «Особенности платформ»)
+5. Если бэкенда нет (драйвер/модуль не установлен) — фоллбек: MJPEG-поток по
+   адресу `http://localhost:8765/stream` (можно как Browser Source в OBS)
 
-#### ▸ Интеграция виртуальной камеры
-- **OBS Studio**: Добавьте Browser Source → `http://localhost:8765/stream`
-- **VLC**: Медиа → Открыть сетевой поток → `http://localhost:8765/stream`
-- **Zoom/Discord**: Используйте OBS Virtual Camera с browser source
+**Скрипты (Axium):**
+1. Откройте вкладку «Скрипты» — полноценная IDE для языка скриптов Axium (AXL):
+   подсветка синтаксиса, автодополнение, инлайн-диагностика компиляции
+2. Напишите скрипт (или начните с шаблона) и нажмите **Запустить** — вывод
+   появится в консоли под редактором
+3. Скрипты могут обращаться к приложению: конвертировать пиксельные буферы в
+   ASCII настоящим движком конверсии, сохранять TXT/PNG, показывать
+   уведомления, переключать темы
+4. Кнопка **Справка по API** открывает встроенную документацию: синтаксис AXL
+   (блоки `([ ])`, точка-терминатор `.`, строки `;текст;`) и все доступные
+   native-функции с описаниями
+5. Скрипты сохраняются в пользовательский конфиг-каталог как файлы `.ax`
 
+> Движок языка Axium — с закрытым исходным кодом; в репозитории лежит только
+> скомпилированный бинарник VM (`assets/Axium/bin/`), который скачивает
+> установщик. Приложение ищет его рядом с исполняемым файлом, в ресурсах
+> бандла и в конфиг-каталоге — если файла всё же нет, во вкладке «Скрипты»
+> появляется кнопка **«Указать файл движка...»** для выбора `.dll`/`.so`
+> вручную (путь запоминается).
 
 ### ═══ Кастомизация
 
-#### ▸ Пользовательские палитры
-Создавайте свои ASCII-палитры в Настройках:
-- Символы отсортированы от самого темного к самому светлому
-- Пример: ` .:-=+*#%@` (простая) или полная расширенная ASCII
-
-#### ▸ Темы
-Переключайтесь между 28 темами в Настройках:
-- **Темная/Светлая**: Современные интерфейсы
-- **Ретро/Терминал**: Ностальгические CRT-стили
-- **Dracula/Monokai/Gruvbox**: Популярные темы редакторов кода
-- И ещё 20+ вариантов
+**Свои палитры** — символы от тёмного к светлому, например ` .:-=+*#%@`.
+**28 тем** со встроенным редактором (цвета правятся кастомным color picker'ом,
+можно сохранять свои темы).
 
 ### ═══ Заметки о производительности
 
-**Метод обработки:**
-- Вся обработка изображений/видео выполняется на CPU (JavaScript + Rust)
-- GPU-ускорение не используется
-- Производительность зависит от скорости CPU и разрешения изображения
-
-**Советы по оптимизации:**
-- Используйте меньшие значения ширины (80-120) для обработки в реальном времени
-- Короткие палитры (10 символов) быстрее детальных (70-92 символа)
-- Цветной рендеринг медленнее монохромного
-- Закройте другие приложения для освобождения ресурсов CPU
+- Конверсия вебкамеры выполняется целиком в Rust на LUT-таблицах; цикл рендера
+  ограничен по FPS камеры, чтобы не жечь CPU
+- Экспорт видео рендерит кадры параллельно на всех ядрах (`rayon`)
+- Меньшая ширина (80–120) и короткие палитры быстрее; цвет медленнее монохрома
 
 ### ═══ Устранение неполадок
 
-**Камера не обнаружена (Windows):**
-- Проверьте разрешения камеры в настройках Windows
-- Убедитесь, что никакое другое приложение не использует камеру
+**Виртуальная камера показывает чёрный экран:** сначала запустите камеру в самом
+приложении (драйвер всегда виден другим приложениям, но показывает чёрное, пока
+приложение не начнёт слать кадры). Перезапустите целевое приложение.
+
+**Камера не обнаружена (Windows):** проверьте разрешения камеры в настройках
+Windows и убедитесь, что её не занимает другое приложение.
 
 **Виртуальная камера не работает (Linux):**
-- Проверьте, загружен ли v4l2loopback: `lsmod | grep v4l2loopback`
-- Проверьте устройства /dev/video: `ls /dev/video*`
+```bash
+lsmod | grep v4l2loopback   # модуль загружен?
+ls /dev/video*              # устройство есть?
+```
 
-**Ошибки сборки:**
-- Очистите кэш: `rm -rf node_modules target` и переустановите
-- Обновите Rust: `rustup update`
-- Обновите Node: Используйте Node 18 LTS или новее
-
-**Проблемы с производительностью:**
-- Уменьшите разрешение/ширину для более быстрой обработки
-- Закройте другие тяжелые приложения
-- Используйте более короткие палитры для лучшей производительности
-
+**Ошибки сборки:** `rustup update`, используйте Node 18 LTS или новее, очистите
+кэш `rm -rf node_modules src-tauri/target` и переустановите.
 
 ### ═══ Лицензия
 
-Этот проект с открытым исходным кодом. См. файл LICENSE для деталей.
+Открытый исходный код под лицензией MIT. См. файл `LICENSE`. Сторонние
+компоненты (softcam, DejaVu Sans Mono, Inter, JetBrains Mono, Lucide)
+задокументированы в папке `licenses/` с их лицензиями.
 
 ### ═══ Автор
 
-**Discord**: @syswow64deleted
-
-Не стесняйтесь обращаться по вопросам, предложениям или для сотрудничества.
+**Discord:** @syswow64deleted
 
 ### ═══ Благодарности
 
-Создано с использованием:
-- [Tauri](https://tauri.app) - Фреймворк для десктопных приложений
-- [React](https://reactjs.org) - UI библиотека
-- [Rust](https://www.rust-lang.org) - Язык системного программирования
-- [image-rs](https://github.com/image-rs/image) - Обработка изображений
+- [Tauri](https://tauri.app) — фреймворк для десктопных приложений
+- [React](https://reactjs.org) — UI-библиотека
+- [Rust](https://www.rust-lang.org) — системный язык
+- [image-rs](https://github.com/image-rs/image) — обработка изображений
+- [softcam](https://github.com/tshino/softcam) — DirectShow виртуальная камера (MIT)
+- [figlet.js](https://github.com/patorjk/figlet.js) — рендеринг Figlet-текста
 
 ---
 
@@ -491,7 +502,7 @@ brew install pkg-config
 ║                                                               ║
 ║                    Made with code in 2026                     ║
 ║                                                               ║
-║            ASCII Art Studio - Where pixels meet characters   ║
+║          ASCII Art Studio — Where pixels meet characters      ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 ```
