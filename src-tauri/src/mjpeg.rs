@@ -161,7 +161,10 @@ async fn start_mjpeg_server(
         .route("/", axum::routing::get(index_page))
         .with_state((frame_buffer, running, target_fps));
 
-    match tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await {
+    // Слушаем только петлевой интерфейс: поток предназначен локальным
+    // приложениям (OBS Browser Source, VLC), а на 0.0.0.0 картинка с
+    // камеры была бы доступна всей локальной сети.
+    match tokio::net::TcpListener::bind(format!("127.0.0.1:{}", port)).await {
         Ok(listener) => {
             eprintln!("✓ Virtual camera HTTP server started on port {}", port);
             let _ = axum::serve(listener, app).await;
