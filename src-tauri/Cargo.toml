@@ -1,6 +1,6 @@
 [package]
 name = "asciiartstudio"
-version = "0.1.0"
+version = "0.2.0"
 description = "It's ASCII ART STUDIO"
 authors = ["Cyn"]
 edition = "2021"

@@ -27,7 +27,7 @@ const APP_EXE: &str = "asciiartstudio";
 #[cfg_attr(not(target_os = "windows"), allow(dead_code))]
 const PUBLISHER: &str = "ASCII Art Studio";
 #[cfg_attr(not(target_os = "windows"), allow(dead_code))]
-const APP_VERSION: &str = "0.1.0";
+const APP_VERSION: &str = "0.2.0";
 // Ключ удаления в «Установка и удаление программ»
 #[cfg(target_os = "windows")]
 const UNINSTALL_KEY: &str =

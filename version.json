@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
-  "notes": "Первый релиз ASCII Art Studio.",
+  "version": "0.2.0",
+  "notes": "Глобальное обновление: скрипты Axium со встроенной IDE, виртуальная камера на Linux (v4l2loopback), собственный установщик для Windows и Linux, масштабирование кадра камеры без обрезки, куча исправлений и 51 тест.",
   "installer": "https://github.com/sosulacka/ASCII-ART-STUDIO/releases/latest/download/ASCII-Art-Studio-Setup.exe"
 }
